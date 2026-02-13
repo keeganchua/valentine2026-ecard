@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Valentine's Story</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      perspective: 1000px;
+    }
+
+    /* Floating hearts background */
+    .heart {
+      position: fixed;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 30px;
+      animation: float 6s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Envelope Section */
+    .envelope-wrapper {
+      position: relative;
+      width: 400px;
+      height: 300px;
+      margin: 0 auto;
+      transition: all 0.8s ease;
+    }
+
+    .envelope-wrapper.opened {
+      transform: scale(0.8) translateY(-50px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .envelope {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .envelope-flap {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 200px solid transparent;
+      border-right: 200px solid transparent;
+      border-bottom: 150px solid #e74c3c;
+      top: 0;
+      left: 0;
+      transform-origin: top center;
+      transition: transform 0.8s ease;
+      z-index: 3;
+    }
+
+    .envelope-wrapper:hover .envelope-flap {
+      transform: rotateX(-20deg);
+    }
+
+    .envelope-wrapper.opened .envelope-flap {
+      transform: rotateX(-180deg);
+    }
+
+    .envelope-body {
+      position: absolute;
+      width: 400px;
+      height: 250px;
+      background: #c0392b;
+      top: 75px;
+      border-radius: 0 0 10px 10px;
+      z-index: 1;
+    }
+
+    .envelope-letter {
+      position: absolute;
+      width: 350px;
+      height: 200px;
+      background: white;
+      top: 50px;
+      left: 25px;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 2;
+      transition: transform 0.8s ease;
+    }
+
+    .envelope-wrapper.opened .envelope-letter {
+      transform: translateY(-50px);
+    }
+
+    .envelope-letter h2 {
+      font-family: 'Dancing Script', cursive;
+      color: #e74c3c;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .envelope-letter p {
+      color: #555;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .open-btn {
+      margin-top: 20px;
+      padding: 12px 30px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    }
+
+    .open-btn:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
+    }
+
+    /* Card Pages Section */
+    .card-container {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease 0.5s;
+      width: 90%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .card-container.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      animation: cardEntry 0.6s ease;
+    }
+
+    @keyframes cardEntry {
+      from { transform: scale(0.8) rotateY(-20deg); opacity: 0; }
+      to { transform: scale(1) rotateY(0); opacity: 1; }
+    }
+
+    .card-page {
+      display: none;
+    }
+
+    .card-page.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .photo-frame {
+      width: 100%;
+      height: 300px;
+      border-radius: 15px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card h2 {
+      font-family: 'Dancing Script', cursive;
+      color: #e74c3c;
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      color: #555;
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .page-indicator {
+      color: #999;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .nav-btn.prev {
+      background: #ecf0f1;
+      color: #555;
+    }
+
+    .nav-btn.next, .nav-btn.finish {
+      background: #e74c3c;
+      color: white;
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: #e74c3c;
+      position: absolute;
+      animation: confetti-fall 3s linear infinite;
+    }
+
+    @keyframes confetti-fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Final message */
+    .final-message {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      padding: 40px;
+      border-radius: 20px;
+      color: white;
+    }
+
+    .final-message h2 {
+      color: white;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .envelope-wrapper {
+        width: 300px;
+        height: 225px;
+      }
+      .envelope-flap {
+        border-left: 150px solid transparent;
+        border-right: 150px solid transparent;
+        border-bottom: 112px solid #e74c3c;
+      }
+      .envelope-body {
+        width: 300px;
+        height: 187px;
+      }
+      .envelope-letter {
+        width: 260px;
+        height: 150px;
+        left: 20px;
+        padding: 15px;
+      }
+      .envelope-letter h2 {
+        font-size: 22px;
+      }
+      .envelope-letter p {
+        font-size: 12px;
+      }
+      .card {
+        padding: 20px;
+      }
+      .photo-frame {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating hearts -->
+  <div id="hearts-container"></div>
+
+  <div class="container">
+    <!-- Envelope Section -->
+    <div class="envelope-wrapper" id="envelopeWrapper">
+      <div class="envelope" onclick="openEnvelope()">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body"></div>
+        <div class="envelope-letter">
+          <h2>💌 For You</h2>
+          <p>Click to open a special Valentine's journey through our memories together...</p>
+          <button class="open-btn" onclick="openEnvelope()">Open</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Pages Section -->
+    <div class="card-container" id="cardContainer">
+      <div class="card">
+        <!-- Page 1 -->
+        <div class="card-page active" id="page1">
+          <div class="photo-frame">
+            <img src="photos/photo1.jpg" alt="Our first memory">
+          </div>
+          <h2>Our First Adventure</h2>
+          <p class="page-indicator">Memory 1 of 5</p>
+          <p>Remember when we first met? That moment changed everything. Your smile lit up my world.</p>
+          <div class="nav-buttons">
+            <button class="nav-btn prev" disabled>Previous</button>
+            <button class="nav-btn next" onclick="nextPage()">Next Memory →</button>
+          </div>
+        </div>
+
+        <!-- Page 2 -->
+        <div class="card-page" id="page2">
+          <div class="photo-frame">
+            <img src="photos/photo2.jpg" alt="Our second memory">
+          </div>
+          <h2>The Day We...</h2>
+          <p class="page-indicator">Memory 2 of 5</p>
+          <p>This was the day everything felt perfect. Every moment with you is a treasure I hold close to my heart.</p>
+          <div class="nav-buttons">
+            <button class="nav-btn prev" onclick="prevPage()">← Previous</button>
+            <button class="nav-btn next" onclick="nextPage()">Next Memory →</button>
+          </div>
+        </div>
+
+        <!-- Page 3 -->
+        <div class="card-page" id="page3">
+          <div class="photo-frame">
+            <img src="photos/photo3.jpg" alt="Our third memory">
+          </div>
+          <h2>Unforgettable Times</h2>
+          <p class="page-indicator">Memory 3 of 5</p>
+          <p>Your laugh, your joy, the way you make ordinary moments extraordinary. I'm so grateful for you.</p>
+          <div class="nav-buttons">
+            <button class="nav-btn prev" onclick="prevPage()">← Previous</button>
+            <button class="nav-btn next" onclick="nextPage()">Next Memory →</button>
+          </div>
+        </div>
+
+        <!-- Page 4 -->
+        <div class="card-page" id="page4">
+          <div class="photo-frame">
+            <img src="photos/photo4.jpg" alt="Our fourth memory">
+          </div>
+          <h2>Making Memories</h2>
+          <p class="page-indicator">Memory 4 of 5</p>
+          <p>Every adventure with you is my favorite adventure. Here's to a thousand more moments like these.</p>
+          <div class="nav-buttons">
+            <button class="nav-btn prev" onclick="prevPage()">← Previous</button>
+            <button class="nav-btn next" onclick="nextPage()">Next Memory →</button>
+          </div>
+        </div>
+
+        <!-- Page 5 - Final -->
+        <div class="card-page" id="page5">
+          <div class="final-message">
+            <h2>Happy Valentine's Day! 💕</h2>
+            <p style="color: white; font-size: 18px;">Thank you for being my everything. For all the laughs, the adventures, and the love we share. Here's to forever with you.</p>
+            <p style="color: white; font-size: 24px; margin-top: 30px;">I love you more than words can say ❤️</p>
+          </div>
+          <p class="page-indicator">Memory 5 of 5</p>
+          <div class="nav-buttons">
+            <button class="nav-btn prev" onclick="prevPage()">← Previous</button>
+            <button class="nav-btn finish" onclick="restart()">Start Over 🔄</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    const totalPages = 5;
+
+    // Create floating hearts
+    function createHearts() {
+      const container = document.getElementById('hearts-container');
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDelay = Math.random() * 6 + 's';
+        heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+        container.appendChild(heart);
+      }
+    }
+
+    function openEnvelope() {
+      document.getElementById('envelopeWrapper').classList.add('opened');
+      setTimeout(() => {
+        document.getElementById('cardContainer').classList.add('active');
+        createConfetti();
+      }, 800);
+    }
+
+    function nextPage() {
+      if (currentPage < totalPages) {
+        document.getElementById(`page${currentPage}`).classList.remove('active');
+        currentPage++;
+        document.getElementById(`page${currentPage}`).classList.add('active');
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        document.getElementById(`page${currentPage}`).classList.remove('active');
+        currentPage--;
+        document.getElementById(`page${currentPage}`).classList.add('active');
+      }
+    }
+
+    function restart() {
+      document.getElementById(`page${currentPage}`).classList.remove('active');
+      currentPage = 1;
+      document.getElementById('cardContainer').classList.remove('active');
+      document.getElementById('envelopeWrapper').classList.remove('opened');
+      setTimeout(() => {
+        document.getElementById('page1').classList.add('active');
+      }, 500);
+    }
+
+    function createConfetti() {
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.background = ['#e74c3c', '#f39c12', '#9b59b6', '#3498db'][Math.floor(Math.random() * 4)];
+          confetti.style.animationDelay = Math.random() * 3 + 's';
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 3000);
+        }, i * 100);
+      }
+    }
+
+    createHearts();
+  </script>
+</body>
+</html>
